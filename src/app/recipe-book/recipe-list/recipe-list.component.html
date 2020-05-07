@@ -6,6 +6,9 @@
 <hr />
 <div class="row">
   <div class="col-xs-12">
-    <app-recipe-item *ngFor="let recipeEl of recipes" [recipe]="recipeEl"></app-recipe-item>
+    <!--V1 - We have an void emitter and the element selected is handled by the recipe list component-->
+    <!--<app-recipe-item *ngFor="let recipeEl of recipes" [recipe]="recipeEl" (recipeEmitter)="onRecipeSelected(recipeEl)"></app-recipe-item>-->
+    <!--V2 - We have an Recipe emitter and the element selected is handled by the recipe item component-->
+    <app-recipe-item *ngFor="let recipeEl of recipes" [recipe]="recipeEl" (recipeEmitter)="onRecipeSelected($event)"></app-recipe-item>
   </div>
 </div>
