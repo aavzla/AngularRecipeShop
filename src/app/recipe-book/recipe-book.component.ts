@@ -15,7 +15,7 @@ export class RecipeBookComponent implements OnInit {
   }
 
   onRecipeSelected(recipe: Recipe) {
-    console.log(this.constructor.name + ' has received the selected recipe ' + recipe.name);
+    //console.log(this.constructor.name + ' has received the selected recipe ' + recipe.name);
     this.recipeSelected = recipe;
   }
 
