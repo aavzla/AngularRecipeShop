@@ -1,6 +1,8 @@
 <div class="row">
   <div class="col-md-5">
-    <app-recipe-list (recipeSelectedEmitter)="onRecipeSelected($event)"></app-recipe-list>
+    <!--V3 - Using a Service in the recipe item, so no need to use property and event binding to communicate-->
+    <!--<app-recipe-list (recipeSelectedEmitter)="onRecipeSelected($event)"></app-recipe-list>-->
+    <app-recipe-list></app-recipe-list>
   </div>
   <div class="col-md-7">
     <app-recipe-detail
