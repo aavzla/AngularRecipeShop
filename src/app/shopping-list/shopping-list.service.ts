@@ -18,7 +18,21 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
-    this.ingredients.push(ingredient);
+    let indexExistingIngredient = this.ingredients.findIndex(
+      (ingredientInsideArray: Ingredient) => {
+        return ingredientInsideArray.name.toLowerCase() === ingredient.name.trim().toLowerCase();
+      });
+
+    let hasIngredient = indexExistingIngredient !== -1;
+    if (hasIngredient) {
+      let amountModified: number = parseInt(this.ingredients[indexExistingIngredient].amount.toString()) + parseInt(ingredient.amount.toString());
+      //console.log('before ' + this.ingredients[indexExistingIngredient].amount);
+      this.ingredients[indexExistingIngredient].amount = amountModified;
+      //console.log('after ' + this.ingredients[indexExistingIngredient].amount);
+    }
+    else {
+      this.ingredients.push(ingredient);
+    }
     this.ingredientsChanged.emit(this.getIngredients());
   }
 }
