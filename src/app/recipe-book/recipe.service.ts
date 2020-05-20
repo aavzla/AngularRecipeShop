@@ -1,12 +1,14 @@
 import { Recipe } from './recipe.model';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
+@Injectable()
 export class RecipeService {
   private recipes: Recipe[] = [];
   recipeSelected: EventEmitter<Recipe>;
 
-  constructor() {
+  constructor(private shoppingListService: ShoppingListService) {
     this.recipes.push(new Recipe(
       "Tasty Schnitzel",
       "A super-tasty Schnitzel - just awesome!",
@@ -32,5 +34,9 @@ export class RecipeService {
     //By using slice, we will return a new array with the same content that the recipes list.
     //This will avoid to have any unwanted changes to the recipe list.
     return this.recipes.slice();
+  }
+
+  addIngredientsToShoppingList(ingredients: Ingredient[]) {
+    this.shoppingListService.addIngredients(ingredients);
   }
 }

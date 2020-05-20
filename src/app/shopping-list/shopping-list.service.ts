@@ -18,6 +18,11 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
+    this.addModifyIngredient(ingredient);
+    this.ingredientsChanged.emit(this.getIngredients());
+  }
+
+  private addModifyIngredient(ingredient: Ingredient) {
     let indexExistingIngredient = this.ingredients.findIndex(
       (ingredientInsideArray: Ingredient) => {
         return ingredientInsideArray.name.toLowerCase() === ingredient.name.trim().toLowerCase();
@@ -32,6 +37,12 @@ export class ShoppingListService {
     }
     else {
       this.ingredients.push(ingredient);
+    }
+  }
+
+  addIngredients(ingredients: Ingredient[]) {
+    for (let ingredient of ingredients) {
+      this.addModifyIngredient(ingredient);
     }
     this.ingredientsChanged.emit(this.getIngredients());
   }
