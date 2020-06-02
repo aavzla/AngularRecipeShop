@@ -12,8 +12,12 @@
         <li><a href="#" (click)="onSelect('recipe')">Recipes</a></li>
         <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a></li>
           -->
-        <li><a routerLink="/recipe-book">Recipes</a></li>
-        <li><a routerLink="/shopping-list">Shopping List</a></li>
+        <li routerLinkActive="active">
+          <a routerLink="/recipe-book">Recipes</a>
+        </li>
+        <li routerLinkActive="active">
+          <a routerLink="/shopping-list">Shopping List</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li appDropdown class="dropdown">
