@@ -6,7 +6,7 @@ import {
   //Output
 } from '@angular/core';
 import { Recipe } from '../../recipe.model';
-import { RecipeService } from '../../recipe.service';
+//import { RecipeService } from '../../recipe.service';
 
 @Component({
   selector: 'app-recipe-item',
@@ -20,6 +20,8 @@ export class RecipeItemComponent implements OnInit {
   //V2 - We have an Recipe emitter and the element selected is handled by this component
  // @Output() recipeEmitter: EventEmitter<Recipe>;
 
+  /*
+   * V4 Routing
   //V3
   //Inject the service into the component
   constructor(private recipeService: RecipeService) {
@@ -28,10 +30,13 @@ export class RecipeItemComponent implements OnInit {
     //V2
     //this.recipeEmitter = new EventEmitter<Recipe>();
   }
+  */
 
   ngOnInit(): void {
   }
 
+  /*
+   * V4 Routing
   onSelectedRecipe() {
     //V1
     //console.log(this.constructor.name + ' a recipe was selected');
@@ -44,4 +49,5 @@ export class RecipeItemComponent implements OnInit {
     //Using a service
     this.recipeService.recipeSelected.emit(this.recipe);
   }
+  */
 }

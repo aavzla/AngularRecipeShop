@@ -36,6 +36,13 @@ export class RecipeService {
     return this.recipes.slice();
   }
 
+  getRecipe(id: number) {
+    //This is if we implement the slice to get a copy and not the original item. But, also it won't be a deep copy.
+    //return this.recipes.slice()[id];
+
+    return this.recipes[id];
+  }
+
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.shoppingListService.addIngredients(ingredients);
   }
