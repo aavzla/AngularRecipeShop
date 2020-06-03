@@ -15,6 +15,8 @@ import { Recipe } from '../../recipe.model';
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe: Recipe;
+  @Input() index: number;
+
   //V1 - We have an void emitter and the element selected is handled by the recipe list component
   //@Output() recipeEmitter: EventEmitter<void>;
   //V2 - We have an Recipe emitter and the element selected is handled by this component
