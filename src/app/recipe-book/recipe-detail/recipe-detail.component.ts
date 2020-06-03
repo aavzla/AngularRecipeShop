@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -19,7 +19,8 @@ export class RecipeDetailComponent implements OnInit {
 
   constructor(
     private recipeService: RecipeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -33,5 +34,16 @@ export class RecipeDetailComponent implements OnInit {
 
   onAddToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(this.recipeSelected.ingredients);
+  }
+
+  onEditRecipe() {
+    //Here, we don't need to pass the id, because it is already part of the existing URL,
+    //and Angular will concat the existing URL with this new part added to the end of the URL.
+    //So, it will work.
+    this.router.navigate(['edit'], { relativeTo: this.route });
+
+    //Here we will go up one level and then we add the id stored here and the word edit.
+    //This will work also. This is for testing purposes.
+    //this.router.navigate(['../', this.id, 'edit'], { relativeTo: this.route });
   }
 }
