@@ -1,12 +1,17 @@
+import {
+  //EventEmitter,
+  Injectable
+} from '@angular/core';
+
 import { Recipe } from './recipe.model';
-import { EventEmitter, Injectable } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 @Injectable()
 export class RecipeService {
   private recipes: Recipe[] = [];
-  recipeSelected: EventEmitter<Recipe>;
+  //This is the old way to communicate changes with the recipes array before routing.
+  //recipeSelected: EventEmitter<Recipe>;
 
   constructor(private shoppingListService: ShoppingListService) {
     this.recipes.push(new Recipe(
@@ -27,7 +32,7 @@ export class RecipeService {
         new Ingredient("Meat", 1)
       ]
     ));
-    this.recipeSelected = new EventEmitter<Recipe>();
+    //this.recipeSelected = new EventEmitter<Recipe>();
   }
 
   getRecipes() {
