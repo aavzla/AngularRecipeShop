@@ -3,7 +3,7 @@ import {
   OnInit,
   OnDestroy,
   //ElementRef,
-  //ViewChild,
+  ViewChild,
   //Output,
   //EventEmitter
 } from '@angular/core';
@@ -26,17 +26,22 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   //Using a Service in the recipe item, so no need to use property and event binding to communicate
   //@Output() ingredientEmitter: EventEmitter<Ingredient>;
 
+  //Get access to the form
+  @ViewChild('f', { static: false }) form: NgForm
+
   //Local variable to access the subscription of the startedEditing.
   subscription: Subscription
   //Tracks if the access to this component is for edit or create.
   editMode: boolean;
   //Local access to the edit item index.
   editedItemIndex: number;
+  //Local access to the edited item.
+  editedItem: Ingredient
 
   constructor(private shoppingListService: ShoppingListService) {
     //this.ingredientEmitter = new EventEmitter<Ingredient>();
     this.editMode = false;
-    console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
+    //console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
   }
 
   ngOnInit(): void {
@@ -45,8 +50,14 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
       (index: number) => {
         this.editMode = true;
         this.editedItemIndex = index;
-        console.log(this.constructor.name + ' The edit item index received is ' + this.editedItemIndex);
-        console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
+        //console.log(this.constructor.name + ' The edit item index received is ' + this.editedItemIndex);
+        //console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
+        this.editedItem = this.shoppingListService.getIngredient(this.editedItemIndex);
+        //load the values to the input field to display the selected item.
+        this.form.setValue({
+          name: this.editedItem.name,
+          amount: this.editedItem.amount
+        });
       }
     );
   }
