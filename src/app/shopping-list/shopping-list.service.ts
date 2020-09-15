@@ -31,12 +31,17 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
-    this.addModifyIngredient(ingredient);
+    this.addModifyIngredient(ingredient, false);
     //this.ingredientsChanged.emit(this.getIngredients());
     this.ingredientsChanged.next(this.getIngredients());
   }
 
-  private addModifyIngredient(ingredient: Ingredient) {
+  updateIngredient(ingredient: Ingredient) {
+    this.addModifyIngredient(ingredient, true);
+    this.ingredientsChanged.next(this.getIngredients());
+  }
+
+  private addModifyIngredient(ingredient: Ingredient, isUpdate: boolean) {
     let indexExistingIngredient = this.ingredients.findIndex(
       (ingredientInsideArray: Ingredient) => {
         return ingredientInsideArray.name.toLowerCase() === ingredient.name.trim().toLowerCase();
@@ -44,7 +49,12 @@ export class ShoppingListService {
 
     let hasIngredient = indexExistingIngredient !== -1;
     if (hasIngredient) {
-      let amountModified: number = parseInt(this.ingredients[indexExistingIngredient].amount.toString()) + parseInt(ingredient.amount.toString());
+      let amountModified: number;
+      if (isUpdate) {
+        amountModified = ingredient.amount;
+      } else {
+        amountModified = parseInt(this.ingredients[indexExistingIngredient].amount.toString()) + parseInt(ingredient.amount.toString());
+      }
       //console.log('before ' + this.ingredients[indexExistingIngredient].amount);
       this.ingredients[indexExistingIngredient].amount = amountModified;
       //console.log('after ' + this.ingredients[indexExistingIngredient].amount);
@@ -56,7 +66,7 @@ export class ShoppingListService {
 
   addIngredients(ingredients: Ingredient[]) {
     for (let ingredient of ingredients) {
-      this.addModifyIngredient(ingredient);
+      this.addModifyIngredient(ingredient, false);
     }
     //this.ingredientsChanged.emit(this.getIngredients());
     this.ingredientsChanged.next(this.getIngredients());
