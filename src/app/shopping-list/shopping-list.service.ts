@@ -9,11 +9,15 @@ export class ShoppingListService {
   //ingredientsChanged: EventEmitter<Ingredient[]>;
   ingredientsChanged: Subject<Ingredient[]>;
 
+  //This observable will track the edit of an ingredient.
+  startedEditing: Subject<number>;
+
   constructor() {
     this.ingredients.push(new Ingredient("Apples", 5));
     this.ingredients.push(new Ingredient("Tomatoes", 10));
     //this.ingredientsChanged = new EventEmitter<Ingredient[]>();
     this.ingredientsChanged = new Subject<Ingredient[]>();
+    this.startedEditing = new Subject<number>();
   }
 
   getIngredients() {

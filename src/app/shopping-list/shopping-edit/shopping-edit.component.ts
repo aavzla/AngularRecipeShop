@@ -1,21 +1,24 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   //ElementRef,
   //ViewChild,
   //Output,
   //EventEmitter
 } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import { Ingredient } from '../../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
-import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class ShoppingEditComponent implements OnInit {
+export class ShoppingEditComponent implements OnInit, OnDestroy {
   //By implementing forms, we no longer need the local references by ViewChild
   //@ViewChild('nameInput') nameInput: ElementRef
   //@ViewChild('amountInput') amountInput: ElementRef;
@@ -23,11 +26,29 @@ export class ShoppingEditComponent implements OnInit {
   //Using a Service in the recipe item, so no need to use property and event binding to communicate
   //@Output() ingredientEmitter: EventEmitter<Ingredient>;
 
+  //Local variable to access the subscription of the startedEditing.
+  subscription: Subscription
+  //Tracks if the access to this component is for edit or create.
+  editMode: boolean;
+  //Local access to the edit item index.
+  editedItemIndex: number;
+
   constructor(private shoppingListService: ShoppingListService) {
     //this.ingredientEmitter = new EventEmitter<Ingredient>();
+    this.editMode = false;
+    console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
   }
 
   ngOnInit(): void {
+    //Here, we subscribe to listen to any changes at the index wanted to be edited.
+    this.subscription = this.shoppingListService.startedEditing.subscribe(
+      (index: number) => {
+        this.editMode = true;
+        this.editedItemIndex = index;
+        console.log(this.constructor.name + ' The edit item index received is ' + this.editedItemIndex);
+        console.log(this.constructor.name + ' Is an edit mode? ' + this.editMode);
+      }
+    );
   }
 
   onAddIngredient(form: NgForm) {
@@ -44,5 +65,10 @@ export class ShoppingEditComponent implements OnInit {
     );
     //this.ingredientEmitter.emit(this.ingredient);
     this.shoppingListService.addIngredient(this.ingredient);
+  }
+
+  ngOnDestroy() {
+    //We unsubscribe to avoid any memory leak and keep it clean.
+    this.subscription.unsubscribe();
   }
 }
