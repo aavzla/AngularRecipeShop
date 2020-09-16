@@ -62,7 +62,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  onAddIngredient(form: NgForm) {
+  //The method was renamed from onAddIngredient to onSubmit to include the update action.
+  onSubmit(form: NgForm) {
     //console.log(this.constructor.name + ' this is the name input value ' + this.nameInput.nativeElement.value);
     //console.log(this.constructor.name + ' this is the amount input value ' + this.amountInput.nativeElement.value);
     this.ingredient = new Ingredient(
@@ -80,6 +81,10 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     } else {
       this.shoppingListService.addIngredient(this.ingredient);
     }
+
+    //Reset the mode and the fields after a submit of the form
+    this.editMode = false;
+    this.form.reset();
   }
 
   ngOnDestroy() {

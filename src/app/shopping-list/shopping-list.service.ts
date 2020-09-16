@@ -58,8 +58,13 @@ export class ShoppingListService {
       //console.log('before ' + this.ingredients[indexExistingIngredient].amount);
       this.ingredients[indexExistingIngredient].amount = amountModified;
       //console.log('after ' + this.ingredients[indexExistingIngredient].amount);
+
+      //Capitalize the first letter of the name all the time.
+      this.ingredients[indexExistingIngredient].name = ingredient.name.charAt(0).toUpperCase() + ingredient.name.slice(1);
     }
     else {
+      //Capitalize the first letter of the name all the time.
+      ingredient.name = ingredient.name.charAt(0).toUpperCase() + ingredient.name.slice(1);
       this.ingredients.push(ingredient);
     }
   }
