@@ -33,9 +33,9 @@ export class RecipeEditComponent implements OnInit {
         //console.log(this.constructor.name + ' - editMode value is ' + this.editMode);
         //console.log(this.constructor.name + ' - id value is ' + this.id);
         this.initForm();
-        console.log(this.constructor.name + ' - the recipe name is ' + (this.recipeForm.value.name === '' ? 'empty' : this.recipeForm.value.name));
-        console.log(this.constructor.name + ' - the recipe description is ' + (this.recipeForm.value.description === '' ? 'empty' : this.recipeForm.value.description));
-        console.log(this.constructor.name + ' - the recipe imagePath is ' + (this.recipeForm.value.imagePath === '' ? 'empty' : this.recipeForm.value.imagePath));
+        //console.log(this.constructor.name + ' - the recipe name is ' + (this.recipeForm.value.name === '' ? 'empty' : this.recipeForm.value.name));
+        //console.log(this.constructor.name + ' - the recipe description is ' + (this.recipeForm.value.description === '' ? 'empty' : this.recipeForm.value.description));
+        //console.log(this.constructor.name + ' - the recipe imagePath is ' + (this.recipeForm.value.imagePath === '' ? 'empty' : this.recipeForm.value.imagePath));
       }
     );
   }
@@ -57,5 +57,9 @@ export class RecipeEditComponent implements OnInit {
       description : new FormControl(recipeDescription),
       imagePath : new FormControl(recipeImagePath)
     });
+  }
+
+  onSubmit() {
+    console.log(this.constructor.name + ' - this is the form submitted.', this.recipeForm);
   }
 }
