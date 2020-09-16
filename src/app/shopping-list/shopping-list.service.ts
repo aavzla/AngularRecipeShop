@@ -41,6 +41,11 @@ export class ShoppingListService {
     this.ingredientsChanged.next(this.getIngredients());
   }
 
+  deleteIngredient(index: number) {
+    this.ingredients.splice(index, 1);
+    this.ingredientsChanged.next(this.getIngredients());
+  }
+
   private addModifyIngredient(ingredient: Ingredient, isUpdate: boolean) {
     let indexExistingIngredient = this.ingredients.findIndex(
       (ingredientInsideArray: Ingredient) => {
