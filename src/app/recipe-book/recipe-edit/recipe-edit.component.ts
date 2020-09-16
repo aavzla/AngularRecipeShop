@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 import { RecipeService } from '../recipe.service';
 
@@ -44,19 +44,38 @@ export class RecipeEditComponent implements OnInit {
     let recipeName = '';
     let recipeDescription = '';
     let recipeImagePath = '';
+    let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id);
       recipeName = recipe.name;
       recipeDescription = recipe.description;
       recipeImagePath = recipe.imagePath;
+      //Other way to check if we have ingredients in the recipe at the if condition is: recipe['ingredients']
+      //The result should be defined or not and therefore translated to true or false.
+      if (recipe.ingredients.length > 0) {
+        for (let ingredient of recipe.ingredients) {
+          //Add the ingredients name and amount to FormControls inside a FormGroup and this into the FormArray, so we can use it at the view.
+          recipeIngredients.push(new FormGroup({
+            name: new FormControl(ingredient.name),
+            amount: new FormControl(ingredient.amount)
+          }));
+        }
+      }
     }
 
     this.recipeForm = new FormGroup({
       name : new FormControl(recipeName),
       description : new FormControl(recipeDescription),
-      imagePath : new FormControl(recipeImagePath)
+      imagePath: new FormControl(recipeImagePath),
+      ingredients: recipeIngredients
     });
+  }
+
+  //This method will allow to get the controls of the ingredients collection in the view.
+  //Check the ngFor in the ingredients HTML code.
+  get controls() {
+    return (<FormArray>this.recipeForm.get('ingredients')).controls;
   }
 
   onSubmit() {

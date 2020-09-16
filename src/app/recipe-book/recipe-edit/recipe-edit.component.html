@@ -50,16 +50,23 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12">
-          <div class="row">
+        <div class="col-xs-12" formArrayName="ingredients">
+          <!--The ingredientCtrl is a FormArray that holds the FormGroup.
+            We use the index of the FormGroup as the name, so we can have access to the FormControls inside it for the inputs.-->
+          <div
+               class="row"
+               *ngFor="let ingredientCtrl of controls; let i = index"
+               [formGroupName]="i">
             <div class="col-xs-8">
               <input id=""
                      type="text"
+                     formControlName="name"
                      class="form-control" />
             </div>
             <div class="col-xs-2">
               <input id=""
                      type="number"
+                     formControlName="amount"
                      class="form-control" />
             </div>
             <div class="col-xs-2">
