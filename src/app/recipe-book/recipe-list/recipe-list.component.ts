@@ -14,7 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./recipe-list.component.css']
 })
 export class RecipeListComponent implements OnInit {
-  recipes: Recipe[] = [];
+  recipes: Recipe[];
   //V3 - Using a Service in the recipe item, so no need to use property and event binding to communicate
   //recipeSelected: Recipe;
   //@Output() recipeSelectedEmitter: EventEmitter<Recipe>;
@@ -31,6 +31,11 @@ export class RecipeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipes = this.recipeService.getRecipes();
+    this.recipeService.recipesChange.subscribe(
+      (recipes: Recipe[]) => {
+        this.recipes = recipes;
+      }
+    );
   }
 
   /*

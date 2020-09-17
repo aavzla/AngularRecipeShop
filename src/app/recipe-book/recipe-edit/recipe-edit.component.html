@@ -55,7 +55,7 @@
           <!--The ingredientCtrl is a FormArray that holds the FormGroup.
             We use the index of the FormGroup as the name, so we can have access to the FormControls inside it for the inputs.-->
           <div class="row"
-               *ngFor="let ingredientCtrl of controls; let i = index"
+               *ngFor="let ingredientCtrl of ingredientsControls; let i = index"
                [formGroupName]="i"
                style="margin-top: 5px;">
             <div class="col-xs-8">

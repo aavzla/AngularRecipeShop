@@ -2,6 +2,7 @@ import {
   //EventEmitter,
   Injectable
 } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
@@ -9,11 +10,15 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 @Injectable()
 export class RecipeService {
+  recipesChange: Subject<Recipe[]>;
+
   private recipes: Recipe[] = [];
   //This is the old way to communicate changes with the recipes array before routing.
   //recipeSelected: EventEmitter<Recipe>;
 
   constructor(private shoppingListService: ShoppingListService) {
+    this.recipesChange = new Subject<Recipe[]>();
+
     this.recipes.push(new Recipe(
       "Tasty Schnitzel",
       "A super-tasty Schnitzel - just awesome!",
@@ -50,5 +55,15 @@ export class RecipeService {
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.shoppingListService.addIngredients(ingredients);
+  }
+
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.recipesChange.next(this.getRecipes());
+  }
+
+  updateRecipe(index: number, newRecipe: Recipe) {
+    this.recipes[index] = newRecipe;
+    this.recipesChange.next(this.getRecipes());
   }
 }
