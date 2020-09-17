@@ -1,9 +1,12 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   //Output,
   //EventEmitter
 } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,11 +16,14 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './recipe-list.component.html',
   styleUrls: ['./recipe-list.component.css']
 })
-export class RecipeListComponent implements OnInit {
+export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   //V3 - Using a Service in the recipe item, so no need to use property and event binding to communicate
   //recipeSelected: Recipe;
   //@Output() recipeSelectedEmitter: EventEmitter<Recipe>;
+
+  //Local variable to access the subscription.
+  subscription: Subscription;
 
   constructor(
     private recipeService: RecipeService,
@@ -31,7 +37,7 @@ export class RecipeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipes = this.recipeService.getRecipes();
-    this.recipeService.recipesChange.subscribe(
+    this.subscription = this.recipeService.recipesChange.subscribe(
       (recipes: Recipe[]) => {
         this.recipes = recipes;
       }
@@ -49,5 +55,10 @@ export class RecipeListComponent implements OnInit {
 
   onNewRecipe() {
     this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  ngOnDestroy() {
+    //We unsubscribe to avoid any memory leak and keep it clean.
+    this.subscription.unsubscribe();
   }
 }
