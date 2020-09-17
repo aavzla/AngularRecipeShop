@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
 import { RecipeService } from '../recipe.service';
@@ -19,7 +19,8 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup
 
   constructor(private route: ActivatedRoute,
-    private recipeService: RecipeService) {
+    private recipeService: RecipeService,
+    private router: Router) {
     this.editMode = false;
   }
 
@@ -134,5 +135,23 @@ export class RecipeEditComponent implements OnInit {
       );
     }
     //console.log(this.constructor.name + ' - this is the recipes after submit.', this.recipeService.getRecipes());
+
+    this.onResetForm();
+    this.navigateOneUp();
+  }
+
+  onCancel() {
+    this.onResetForm();
+    this.navigateOneUp();
+  }
+
+  private onResetForm() {
+    //Reset the mode and the fields after a submit of the form
+    this.editMode = false;
+    this.recipeForm.reset();
+  }
+
+  private navigateOneUp() {
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }
