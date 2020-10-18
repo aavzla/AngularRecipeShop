@@ -1,5 +1,6 @@
 import {
   Component,
+  OnInit,
   //Output,
   //EventEmitter
 } from "@angular/core";
@@ -11,7 +12,7 @@ import { DataStorageService } from '../shared/data-storage.service';
   templateUrl: './header.component.html'
 })
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   collapsed: boolean;
   //@Output() featureSelected: EventEmitter<string>;
 
@@ -21,6 +22,12 @@ export class HeaderComponent {
     this.collapsed = true;
     //this.featureSelected = new EventEmitter<string>();
   }
+
+  ngOnInit(): void {
+    //Comment on the line below to avoid the load of the recipes automatically.
+    this.dataStorageService.fetchRecipes();
+  }
+
   /*
   onSelect(feature: string) {
     //console.log('The value of feature is ' + feature);
@@ -30,5 +37,10 @@ export class HeaderComponent {
 
   onSaveData() {
     this.dataStorageService.storeRecipes();
+  }
+
+  onFetchData() {
+    this.dataStorageService.fetchRecipes();
+    alert('The recipes are loaded');
   }
 }
