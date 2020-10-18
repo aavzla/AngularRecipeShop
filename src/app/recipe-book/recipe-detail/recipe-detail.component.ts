@@ -33,6 +33,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onAddToShoppingList() {
+    //console.log(this.constructor.name + ' -  Ingredients of the selected recipe.', this.recipeSelected.ingredients);
     this.recipeService.addIngredientsToShoppingList(this.recipeSelected.ingredients);
   }
 

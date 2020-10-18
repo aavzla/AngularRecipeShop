@@ -63,6 +63,7 @@ export class RecipeService {
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
+    //console.log(this.constructor.name + ' - Ingredients received to be added to the shopping list.', ingredients);
     this.shoppingListService.addIngredients(ingredients);
   }
 
