@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  tap
+} from 'rxjs/operators';
 
 import { Recipe } from '../recipe-book/recipe.model';
 import { RecipeService } from '../recipe-book/recipe.service';
@@ -32,7 +35,7 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    this.http
+    return this.http
       .get<Recipe[]>(
         this.recipesURL
       )
@@ -44,11 +47,17 @@ export class DataStorageService {
               ingredients: recipe.ingredients ?? []
             };
           });
+        }),
+        tap(recipes => {
+          //The setting of the recipes is done in the tap to execute the code without altering the stream of data.
+          //console.log(this.constructor.name + ' - Fetch recipes.', recipes);
+          this.recipeService.setRecipes(recipes ?? []);
         })
       )
-      .subscribe(recipes => {
-        //console.log(this.constructor.name + ' - Fetch recipes.', recipes);
-        this.recipeService.setRecipes(recipes ?? []);
-      })
+      //The fetchRecipes will return an Observable as before, but the subscription will be done differently.
+      //The subscribe will be done at the calling code place.
+      //This was also done, so the resolver will have the observable and Angular could subscribe automaticaly under the hood.
+      //.subscribe(recipes => {
+      //})
   }
 }
