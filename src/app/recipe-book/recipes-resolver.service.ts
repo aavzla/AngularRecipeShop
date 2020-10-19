@@ -7,6 +7,7 @@ import {
 
 import { Recipe } from './recipe.model';
 import { DataStorageService } from '../shared/data-storage.service';
+import { RecipeService } from './recipe.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,13 @@ import { DataStorageService } from '../shared/data-storage.service';
 export class RecipesResolverService implements Resolve<Recipe[]> {
 
   constructor(
-    private dataStorageService: DataStorageService
+    private dataStorageService: DataStorageService,
+    private recipeService: RecipeService
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe[] | import("rxjs").Observable<Recipe[]> | Promise<Recipe[]> {
-    return this.dataStorageService.fetchRecipes();
+    if (this.recipeService.getRecipes().length === 0) {
+      return this.dataStorageService.fetchRecipes();
+    }
   }
 }
