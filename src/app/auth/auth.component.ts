@@ -10,11 +10,15 @@ import { AuthService } from './auth.service';
 })
 export class AuthComponent implements OnInit {
   isLoginMode: boolean;
+  isLoading: boolean;
+  error: string;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.isLoginMode = true;
+    this.isLoading = false;
+    this.error = null;
   }
 
   onSwitchMode() {
@@ -30,6 +34,12 @@ export class AuthComponent implements OnInit {
       return;
     }
 
+    //This will check if we had an error before and try to submit again, it will remove it.
+    if (this.error) {
+      this.error = null;
+    }
+
+    this.isLoading = true;
     const email = form.value.email;
     const password = form.value.password;
 
@@ -41,10 +51,12 @@ export class AuthComponent implements OnInit {
       this.authService.signup(email, password)
         .subscribe(responseData => {
           console.log(this.constructor.name + ' - Signup response.', responseData);
+          this.isLoading = false;
         }, error => {
           console.log(this.constructor.name + ' - Signup Error.', error);
+          this.error = 'An error occurred!';
+          this.isLoading = false;
         });
-
     }
 
     form.reset();
