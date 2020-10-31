@@ -7,12 +7,15 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  apiKey: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.apiKey = 'AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s'
+  }
 
   signup(email: string, password: string) {
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + this.apiKey,
       {
         email: email,
         password: password,
@@ -37,12 +40,24 @@ export class AuthService {
       return throwError(errorMessage);
     }));
   }
+
+  login(email: string, password: string) {
+    return this.http.post<AuthResponseData>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + this.apiKey,
+      {
+        email: email,
+        password: password,
+        returnSecureToken: true
+      }
+    );
+  }
 }
 
-interface AuthResponseData {
+export interface AuthResponseData {
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
+  registered?: boolean;
 }
