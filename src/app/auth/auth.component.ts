@@ -52,9 +52,9 @@ export class AuthComponent implements OnInit {
         .subscribe(responseData => {
           console.log(this.constructor.name + ' - Signup response.', responseData);
           this.isLoading = false;
-        }, error => {
-          console.log(this.constructor.name + ' - Signup Error.', error);
-          this.error = 'An error occurred!';
+        }, errorMessage => {
+          console.log(this.constructor.name + ' - Signup Error message.', errorMessage);
+          this.error = errorMessage;
           this.isLoading = false;
         });
     }
