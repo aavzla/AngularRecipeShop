@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -21,24 +21,43 @@ export class AuthService {
         password: password,
         returnSecureToken: true
       }
-    ).pipe(catchError(errorResponse => {
-      console.log(this.constructor.name + ' - Signup Error.', errorResponse);
-      let errorMessage = "An unknown error occurred!";
-      if (errorResponse.error && errorResponse.error.error) {
-        switch (errorResponse.error.error.message) {
-          case 'EMAIL_EXISTS':
-            errorMessage = 'This email exist already.';
-            break;
-          case 'OPERATION_NOT_ALLOWED':
-            errorMessage = 'The Sign-in is disabled.';
-            break;
-          case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-            errorMessage = 'Please stop. Try again later.';
-            break;
-        }
+    ).pipe(catchError(this.handleError));
+  }
+
+  private handleError(errorResponse: HttpErrorResponse) {
+    console.log(this.constructor.name + ' - Error received.', errorResponse);
+    let errorMessage = "An unknown error occurred!";
+    if (errorResponse.error && errorResponse.error.error) {
+      switch (errorResponse.error.error.message) {
+        //Signup cases
+        case 'EMAIL_EXISTS':
+          //The email address is already in use by another account.
+          errorMessage = 'This email exist already.';
+          break;
+        case 'OPERATION_NOT_ALLOWED':
+          //Password sign-in is disabled for this project.
+          errorMessage = 'The Sign-in is disabled.';
+          break;
+        case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+          //We have blocked all requests from this device due to unusual activity.Try again later.
+          errorMessage = 'Please stop. Try again later.';
+          break;
+        //Login cases
+        case 'EMAIL_NOT_FOUND':
+          //There is no user record corresponding to this identifier. The user may have been deleted.
+          errorMessage = 'This email does not exist.';
+          break;
+        case 'INVALID_PASSWORD':
+          //The password is invalid or the user does not have a password.
+          errorMessage = 'This password is not correct.';
+          break;
+        case 'USER_DISABLED':
+          //The user account has been disabled by an administrator.
+          errorMessage = 'Please contact the admin.';
+          break;
       }
-      return throwError(errorMessage);
-    }));
+    }
+    return throwError(errorMessage);
   }
 
   login(email: string, password: string) {
@@ -49,7 +68,7 @@ export class AuthService {
         password: password,
         returnSecureToken: true
       }
-    );
+    ).pipe(catchError(this.handleError));
   }
 }
 
