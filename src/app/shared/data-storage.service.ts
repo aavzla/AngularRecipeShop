@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   map,
-  tap
+  tap,
+  take,
+  exhaustMap
 } from 'rxjs/operators';
 
 import { Recipe } from '../recipe-book/recipe.model';
 import { RecipeService } from '../recipe-book/recipe.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,8 @@ export class DataStorageService {
 
   constructor(
     private http: HttpClient,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private authService: AuthService
   ) {
     this.recipesURL = 'https://recipeshop-99a3f.firebaseio.com/recipes.json';
   }
@@ -35,11 +39,18 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.http
-      .get<Recipe[]>(
-        this.recipesURL
-      )
+    return this.authService.userSubject
       .pipe(
+        take(1),
+        exhaustMap(user => {
+          return this.http
+            .get<Recipe[]>(
+              this.recipesURL,
+              {
+                params: new HttpParams().set('auth', user.token)
+              }
+            );
+        }),
         map(recipes => {
           return recipes.map(recipe => {
             return {
@@ -54,10 +65,11 @@ export class DataStorageService {
           this.recipeService.setRecipes(recipes ?? []);
         })
       )
-      //The fetchRecipes will return an Observable as before, but the subscription will be done differently.
-      //The subscribe will be done at the calling code place.
-      //This was also done, so the resolver will have the observable and Angular could subscribe automaticaly under the hood.
-      //.subscribe(recipes => {
-      //})
+
+    //The fetchRecipes will return an Observable as before, but the subscription will be done differently.
+    //The subscribe will be done at the calling code place.
+    //This was also done, so the resolver will have the observable and Angular could subscribe automaticaly under the hood.
+    //.subscribe(recipes => {
+    //})
   }
 }

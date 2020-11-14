@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     //Comment on the line below to avoid the load of the recipes automatically.
     this.dataStorageService.fetchRecipes().subscribe();
     this.userSub = this.authService.userSubject.subscribe(user => {
-      console.log(this.constructor.name + ' - This is the subscribed user.', user);
+      //console.log(this.constructor.name + ' - This is the subscribed user.', user);
       //The casting of user with the not operator is necesary to convert the object into a boolean.
       //this.isAuthenticated = !user ? false : true;
       //Here is a shortcut of the previous line
@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   onFetchData() {
     this.dataStorageService.fetchRecipes().subscribe();
-    alert('The recipes are loaded');
+    //alert('The recipes are loaded');
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 
 import { User } from './user.model';
 
@@ -10,11 +10,11 @@ import { User } from './user.model';
 })
 export class AuthService {
   apiKey: string;
-  userSubject: Subject<User>;
+  userSubject: BehaviorSubject<User>;
 
   constructor(private http: HttpClient) {
     this.apiKey = 'AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s';
-    this.userSubject = new Subject<User>();
+    this.userSubject = new BehaviorSubject<User>(null);
   }
 
   signup(email: string, password: string) {
