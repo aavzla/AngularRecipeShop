@@ -34,23 +34,17 @@ export class DataStorageService {
       )
       .subscribe(response => {
         //console.log(this.constructor.name + ' -  Saved recipes.', response);
-        alert('The recipes are saved');
+        //alert('The recipes are saved');
       });
   }
 
   fetchRecipes() {
-    return this.authService.userSubject
+
+    return this.http
+      .get<Recipe[]>(
+        this.recipesURL
+      )
       .pipe(
-        take(1),
-        exhaustMap(user => {
-          return this.http
-            .get<Recipe[]>(
-              this.recipesURL,
-              {
-                params: new HttpParams().set('auth', user.token)
-              }
-            );
-        }),
         map(recipes => {
           return recipes.map(recipe => {
             return {
