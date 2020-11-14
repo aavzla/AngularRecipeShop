@@ -62,6 +62,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     //alert('The recipes are loaded');
   }
 
+  onLogout() {
+    this.authService.logout();
+  }
+
   ngOnDestroy() {
     this.authService.userSubject.unsubscribe();
   }

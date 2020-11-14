@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
 
@@ -12,7 +13,10 @@ export class AuthService {
   apiKey: string;
   userSubject: BehaviorSubject<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     this.apiKey = 'AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s';
     this.userSubject = new BehaviorSubject<User>(null);
   }
@@ -92,6 +96,13 @@ export class AuthService {
           +responseData.expiresIn
         );
       }));
+  }
+
+  logout() {
+    //Remove the user by passing null
+    this.userSubject.next(null);
+    //Redirect to the Authenticate page
+    this.router.navigate(['/auth']);
   }
 
   private HandleAuthentication(
