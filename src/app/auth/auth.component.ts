@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { AuthService, AuthResponseData } from './auth.service';
 
@@ -14,7 +15,10 @@ export class AuthComponent implements OnInit {
   isLoading: boolean;
   error: string;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.isLoginMode = true;
@@ -48,19 +52,20 @@ export class AuthComponent implements OnInit {
 
     if (this.isLoginMode) {
       //Login mode.
-      console.log(this.constructor.name + ' - Login mode.');
+      //console.log(this.constructor.name + ' - Login mode.');
       authObservable = this.authService.login(email, password);
     } else {
       //Sign up mode.
-      console.log(this.constructor.name + ' - Sign up mode.');
+      //console.log(this.constructor.name + ' - Sign up mode.');
       authObservable = this.authService.signup(email, password);
     }
 
     authObservable.subscribe(responseData => {
-      console.log(this.constructor.name + ' - Response.', responseData);
+      //console.log(this.constructor.name + ' - Response.', responseData);
       this.isLoading = false;
+      this.router.navigate(['/recipe-book']);
     }, errorMessage => {
-      console.log(this.constructor.name + ' - Error message.', errorMessage);
+      //console.log(this.constructor.name + ' - Error message.', errorMessage);
       this.error = errorMessage;
       this.isLoading = false;
     });

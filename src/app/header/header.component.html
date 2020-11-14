@@ -12,23 +12,26 @@
         <li><a href="#" (click)="onSelect('recipe')">Recipes</a></li>
         <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a></li>
           -->
-        <li routerLinkActive="active">
+        <li routerLinkActive="active" *ngIf="!isAuthenticated">
           <a routerLink="/auth">Authenticate</a>
         </li>
-        <li routerLinkActive="active">
+        <li routerLinkActive="active" *ngIf="isAuthenticated">
           <a routerLink="/recipe-book">Recipes</a>
         </li>
         <li routerLinkActive="active">
           <a routerLink="/shopping-list">Shopping List</a>
         </li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" *ngIf="isAuthenticated">
         <li appDropdown class="dropdown">
-          <a style="cursor:pointer" class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
+          <a style="cursor:pointer;" class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a (click)="onSaveData()" style="cursor:pointer">Save Data</a></li>
             <li><a (click)="onFetchData()" style="cursor:pointer">Fetch Data</a></li>
           </ul>
+        </li>
+        <li>
+          <a style="cursor:pointer;">Logout</a>
         </li>
       </ul>
     </div>
