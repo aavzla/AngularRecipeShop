@@ -12,6 +12,7 @@ import { User } from './user.model';
 export class AuthService {
   apiKey: string;
   userSubject: BehaviorSubject<User>;
+  userData: string;
 
   constructor(
     private http: HttpClient,
@@ -19,6 +20,7 @@ export class AuthService {
   ) {
     this.apiKey = 'AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s';
     this.userSubject = new BehaviorSubject<User>(null);
+    this.userData = "uD";
   }
 
   signup(email: string, password: string) {
@@ -98,6 +100,28 @@ export class AuthService {
       }));
   }
 
+  autoLogin() {
+    //This approach is easy to implement to keep the auth state persistence.
+    //But for a better implementation, take a look at the Firebase docs: https://firebase.google.com/docs/auth/web/auth-state-persistence.
+    const userString = localStorage.getItem(this.userData);
+    console.log(this.constructor.name + ' - This is the userString found in LocalStorage.', userString);
+    if (!userString) {
+      return;
+    }
+    //When we convert the string object with JSON, we could use a JS object, Interface, or Class.
+    //If we use the Class, we will only have access to the public properties and not any getter or method.
+    //If we had: let userObj: User = JSON.parse(userString); -- The user.token getter does not work.
+    let userObj: { email: string, id: string, _token: string, _tokenExpirationDate: Date } = JSON.parse(userString);
+    console.log(this.constructor.name + ' - This is the JSON object of the user found in LocalStorage.', userObj);
+
+    //In order for the getter works, we need to construct the object through the constructor and not by casting.
+    const user = new User(userObj.email, userObj.id, userObj._token, new Date(userObj._tokenExpirationDate));
+    console.log(this.constructor.name + ' - Can i get the user token?', user.token);
+    if (user.token) {
+      this.userSubject.next(user);
+    }
+  }
+
   logout() {
     //Remove the user by passing null
     this.userSubject.next(null);
@@ -121,6 +145,8 @@ export class AuthService {
       expirationDate
     );
     this.userSubject.next(user);
+    //Save the user data in the local storage for auth state persistence.
+    localStorage.setItem(this.userData, JSON.stringify(user));
   }
 }
 
