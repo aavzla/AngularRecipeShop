@@ -13,6 +13,7 @@ export class AuthService {
   apiKey: string;
   userSubject: BehaviorSubject<User>;
   userData: string;
+  private tokenExpirationTimer: any;
 
   constructor(
     private http: HttpClient,
@@ -45,7 +46,7 @@ export class AuthService {
   }
 
   private handleError(errorResponse: HttpErrorResponse) {
-    console.log(this.constructor.name + ' - Error received.', errorResponse);
+    //console.log(this.constructor.name + ' - Error received.', errorResponse);
     let errorMessage = "An unknown error occurred!";
     if (errorResponse.error && errorResponse.error.error) {
       switch (errorResponse.error.error.message) {
@@ -104,7 +105,7 @@ export class AuthService {
     //This approach is easy to implement to keep the auth state persistence.
     //But for a better implementation, take a look at the Firebase docs: https://firebase.google.com/docs/auth/web/auth-state-persistence.
     const userString = localStorage.getItem(this.userData);
-    console.log(this.constructor.name + ' - This is the userString found in LocalStorage.', userString);
+    //console.log(this.constructor.name + ' - This is the userString found in LocalStorage.', userString);
     if (!userString) {
       return;
     }
@@ -112,13 +113,16 @@ export class AuthService {
     //If we use the Class, we will only have access to the public properties and not any getter or method.
     //If we had: let userObj: User = JSON.parse(userString); -- The user.token getter does not work.
     let userObj: { email: string, id: string, _token: string, _tokenExpirationDate: Date } = JSON.parse(userString);
-    console.log(this.constructor.name + ' - This is the JSON object of the user found in LocalStorage.', userObj);
+    //console.log(this.constructor.name + ' - This is the JSON object of the user found in LocalStorage.', userObj);
 
     //In order for the getter works, we need to construct the object through the constructor and not by casting.
     const user = new User(userObj.email, userObj.id, userObj._token, new Date(userObj._tokenExpirationDate));
-    console.log(this.constructor.name + ' - Can i get the user token?', user.token);
+    //console.log(this.constructor.name + ' - Can i get the user token?', user.token);
     if (user.token) {
       this.userSubject.next(user);
+      //Set up the autoLogout timer. Difference between dates. we want milliseconds.
+      const expirationDurationMilliseconds = new Date(userObj._tokenExpirationDate).getTime() - new Date().getTime();
+      this.autoLogout(expirationDurationMilliseconds);
     }
   }
 
@@ -127,6 +131,20 @@ export class AuthService {
     this.userSubject.next(null);
     //Redirect to the Authenticate page
     this.router.navigate(['/auth']);
+    //Clear token of the user
+    localStorage.removeItem(this.userData);
+    //Do we have a tokenExpirationTimer active?
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+      this.tokenExpirationTimer = null;
+    }
+  }
+
+  autoLogout(expirationDurationMilliseconds: number) {
+    //console.log(this.constructor.name + ' - Expiration duration in milliseconds: ' + expirationDurationMilliseconds);
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDurationMilliseconds);
   }
 
   private HandleAuthentication(
@@ -145,6 +163,8 @@ export class AuthService {
       expirationDate
     );
     this.userSubject.next(user);
+    //Set up the autoLogout timer. expiresIn is in seconds. we want milliseconds.
+    this.autoLogout(expiresIn * 1000);
     //Save the user data in the local storage for auth state persistence.
     localStorage.setItem(this.userData, JSON.stringify(user));
   }
