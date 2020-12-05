@@ -7,6 +7,7 @@ import { RecipeDetailComponent } from './recipe-book/recipe-detail/recipe-detail
 import { RecipeStartComponent } from './recipe-book/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipe-book/recipe-edit/recipe-edit.component';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
 
 import { RecipesResolverService } from './recipe-book/recipes-resolver.service';
 
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   {
     path: 'recipe-book',
     component: RecipeBookComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: RecipeStartComponent },
       { path: 'new', component: RecipeEditComponent },
