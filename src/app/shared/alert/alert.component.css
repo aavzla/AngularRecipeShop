@@ -1,0 +1,50 @@
+/*CSS style of the Alert*/
+
+.backdrop{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vw;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 50;
+}
+
+.alert-box {
+    position: fixed;
+    top: 45vw;
+    left: 20vw;
+    width: 60vw;
+    padding: 16px;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.alert-box-actions {
+    text-align: right;
+}
+
+@media (min-width: 600px){
+    .alert-box {
+        top: 35vw;
+    }
+}
+
+@media (min-width: 768px) {
+  .alert-box {
+    top: 30vw;
+  }
+}
+
+@media (min-width: 992px) {
+  .alert-box {
+    top: 25vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  .alert-box {
+    top: 20vw;
+  }
+}
