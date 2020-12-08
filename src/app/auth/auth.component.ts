@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ComponentFactoryResolver
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { AuthService, AuthResponseData } from './auth.service';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 @Component({
   selector: 'app-auth',
@@ -13,11 +18,14 @@ import { AuthService, AuthResponseData } from './auth.service';
 export class AuthComponent implements OnInit {
   isLoginMode: boolean;
   isLoading: boolean;
+  //This component property is used for the error message box and for the ngIf dynamic component approach only.
+  //By using the programmatic dynamic component approach, we no longer need it.
   error: string;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   ngOnInit(): void {
@@ -66,7 +74,11 @@ export class AuthComponent implements OnInit {
       this.router.navigate(['/recipe-book']);
     }, errorMessage => {
       //console.log(this.constructor.name + ' - Error message.', errorMessage);
+      //This component property is used for the error message box and for the ngIf dynamic component approach only.
+      //By using the programmatic dynamic component approach, we no longer need it.
       this.error = errorMessage;
+      //Here we use a private method to create, manage and destroy a programmatic dynamic component.
+      this.showErrorAlert(errorMessage);
       this.isLoading = false;
     });
 
@@ -75,5 +87,9 @@ export class AuthComponent implements OnInit {
 
   onHandleError() {
     this.error = null;
+  }
+
+  private showErrorAlert(message: string) {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
   }
 }
