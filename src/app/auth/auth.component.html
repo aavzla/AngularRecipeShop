@@ -7,10 +7,14 @@
     <!--<div *ngIf="error" class="alert alert-danger">
       <p>{{ error }}</p>
     </div>-->
-    <app-alert [message]="error"
+    <!--Comment the If dynamic component approach-->
+    <!--<app-alert [message]="error"
                *ngIf="error"
                (close)="onHandleError()">
-    </app-alert>
+    </app-alert>-->
+    <ng-template appPlaceholder></ng-template>
+    <!--This is an alternative approach without the use of the directive-->
+    <!--<ng-template #alert></ng-template>-->
     <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
       <div class="form-group">
         <label for="email">E-Mail</label>

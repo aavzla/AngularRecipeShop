@@ -1,7 +1,9 @@
 import {
   Component,
   OnInit,
-  ComponentFactoryResolver
+  ComponentFactoryResolver,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -9,6 +11,7 @@ import { Router } from '@angular/router';
 
 import { AuthService, AuthResponseData } from './auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
 
 @Component({
   selector: 'app-auth',
@@ -21,6 +24,9 @@ export class AuthComponent implements OnInit {
   //This component property is used for the error message box and for the ngIf dynamic component approach only.
   //By using the programmatic dynamic component approach, we no longer need it.
   error: string;
+  @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective;
+  //This is an alternative approach without the use of the directive
+  //@ViewChild('alert') alertViewContainerRef: ViewContainerRef;
 
   constructor(
     private authService: AuthService,
@@ -91,5 +97,12 @@ export class AuthComponent implements OnInit {
 
   private showErrorAlert(message: string) {
     const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+    hostViewContainerRef.createComponent(alertComponentFactory);
+
+    //This is an alternative approach without the use of the directive
+    //this.alertViewContainerRef.clear;
+    //this.alertViewContainerRef.createComponent(alertComponentFactory);
   }
 }
