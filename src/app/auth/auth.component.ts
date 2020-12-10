@@ -3,10 +3,14 @@ import {
   OnInit,
   ComponentFactoryResolver,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
+  OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  Subscription
+} from 'rxjs';
 import { Router } from '@angular/router';
 
 import { AuthService, AuthResponseData } from './auth.service';
@@ -18,7 +22,7 @@ import { PlaceholderDirective } from '../shared/placeholder/placeholder.directiv
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode: boolean;
   isLoading: boolean;
   //This component property is used for the error message box and for the ngIf dynamic component approach only.
@@ -27,6 +31,7 @@ export class AuthComponent implements OnInit {
   @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective;
   //This is an alternative approach without the use of the directive
   //@ViewChild('alert') alertViewContainerRef: ViewContainerRef;
+  private closeSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -95,14 +100,26 @@ export class AuthComponent implements OnInit {
     this.error = null;
   }
 
+  ngOnDestroy() {
+    if (this.closeSubscription) {
+      this.closeSubscription.unsubscribe();
+    }
+  }
+
   private showErrorAlert(message: string) {
     const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
     const hostViewContainerRef = this.alertHost.viewContainerRef;
     hostViewContainerRef.clear();
-    hostViewContainerRef.createComponent(alertComponentFactory);
+    const componentRef = hostViewContainerRef.createComponent(alertComponentFactory);
 
     //This is an alternative approach without the use of the directive
     //this.alertViewContainerRef.clear;
     //this.alertViewContainerRef.createComponent(alertComponentFactory);
+
+    componentRef.instance.message = message;
+    this.closeSubscription = componentRef.instance.close.subscribe(() => {
+      this.closeSubscription.unsubscribe();
+      hostViewContainerRef.clear();
+    });
   }
 }
