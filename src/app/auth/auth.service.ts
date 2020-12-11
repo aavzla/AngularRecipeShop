@@ -19,7 +19,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    this.apiKey = 'AIzaSyCzUr7xoNsMC-xDKS5e0iKvp11pm8bBU6s';
+    this.apiKey = 'AIzaSyB7yimh8DFHSdaPEHO4V1mfdYj_AtYrGg0';
     this.userSubject = new BehaviorSubject<User>(null);
     this.userData = "uD";
   }

@@ -22,7 +22,7 @@ export class DataStorageService {
     private recipeService: RecipeService,
     private authService: AuthService
   ) {
-    this.recipesURL = 'https://recipeshop-99a3f.firebaseio.com/recipes.json';
+    this.recipesURL = 'https://recipeshop-aabb0-default-rtdb.firebaseio.com/recipes.json';
   }
 
   storeRecipes() {
